@@ -17,5 +17,7 @@ namespace TerraCottaStore.Models
 		public int CategoryID { get; set; }
 		public CategoryModel Category { get; set; }
 		public BrandModel Brand { get; set; }
+
+		public string image { get; set; }
 	}
 }

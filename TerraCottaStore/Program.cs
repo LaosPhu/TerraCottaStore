@@ -1,5 +1,12 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using TerraCottaStore.Repository;
 
+var builder = WebApplication.CreateBuilder(args);
+// connect DB
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:ConnedtedDb"]);
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
