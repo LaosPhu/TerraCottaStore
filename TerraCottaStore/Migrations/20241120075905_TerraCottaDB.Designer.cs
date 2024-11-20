@@ -11,8 +11,8 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241119174033_TerraCotta")]
-    partial class TerraCotta
+    [Migration("20241120075905_TerraCottaDB")]
+    partial class TerraCottaDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,8 +68,9 @@ namespace TerraCottaStore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Slug")
-                        .HasColumnType("int");
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -104,9 +105,16 @@ namespace TerraCottaStore.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

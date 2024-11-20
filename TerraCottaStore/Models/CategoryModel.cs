@@ -11,7 +11,7 @@ namespace TerraCottaStore.Models
 		[Required, MinLength(4,ErrorMessage ="Nhập mô tả danh mục")]
 		public string Description { get; set; }
 		[Required]
-		public int Slug { get; set; }
+		public String Slug { get; set; }
 		public int status { get; set; }
 	}
 }

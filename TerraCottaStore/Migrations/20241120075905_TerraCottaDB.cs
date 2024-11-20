@@ -5,7 +5,7 @@
 namespace TerraCottaStore.Migrations
 {
     /// <inheritdoc />
-    public partial class TerraCotta : Migration
+    public partial class TerraCottaDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,7 @@ namespace TerraCottaStore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Slug = table.Column<int>(type: "int", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -53,7 +53,9 @@ namespace TerraCottaStore.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BrandID = table.Column<int>(type: "int", nullable: false),
                     CategoryID = table.Column<int>(type: "int", nullable: false),
-                    image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Slug = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
