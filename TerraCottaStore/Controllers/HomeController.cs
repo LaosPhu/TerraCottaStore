@@ -1,21 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TerraCottaStore.Models;
+using TerraCottaStore.Repository;
 
 namespace TerraCottaStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+		private readonly DataContext _datacontext;
+		private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,DataContext dataContext)
         {
+            _datacontext = dataContext;
             _logger = logger;
         }
 
         public IActionResult Index()
-        {
-            return View();
+        {   
+            var products = _datacontext.Products.Include("Category").Include("Brand").ToList();
+            return View(products);
         }
 
         public IActionResult Privacy()
