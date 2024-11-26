@@ -11,7 +11,7 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241120075905_TerraCottaDB")]
+    [Migration("20241126220124_TerraCottaDB")]
     partial class TerraCottaDB
     {
         /// <inheritdoc />
@@ -103,14 +103,12 @@ namespace TerraCottaStore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 2)");
 
                     b.Property<string>("Slug")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("status")

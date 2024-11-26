@@ -23,10 +23,7 @@ namespace TerraCottaStore.Controllers
 			};
 			return View(CartVM);
 		}	
-		public IActionResult Checkout()
-		{
-			return View("~/Views/Checkout/Index.cshtml");
-		}
+		
 		public async Task<IActionResult>  Add (int id)
 		{
 			ProductModel product =await _datacontext.Products.FindAsync(id);
@@ -41,8 +38,70 @@ namespace TerraCottaStore.Controllers
 				cartItem.Quantati += 1;
 			}
 			HttpContext.Session.Setjson("Cart",Cart);
+			
 			return Redirect(Request.Headers["Referer"].ToString()) ;
 		}
-	}
+		public IActionResult Checkout()
+		{
+			
+			return View("~/Views/Checkout/Index.cshtml");
+		}
+		public async Task<IActionResult> Increase(int id)
+		{
+			List<CartItemModel> Cart = HttpContext.Session.Getjson<List<CartItemModel>>("Cart");
+			CartItemModel cartitem = Cart.Where(x => x.ProductID == id).FirstOrDefault();
+			cartitem.Quantati += 1;
+			HttpContext.Session.Setjson("Cart", Cart);
+			TempData["success"] = "Tăng số lượng sản phẩm thành công !";
+			return RedirectToAction("index");
+		}
+		public async Task<IActionResult> Decrease(int id)
+		{
+			List<CartItemModel> Cart = HttpContext.Session.Getjson<List<CartItemModel>>("Cart");
+			CartItemModel cartitem = Cart.Where(x => x.ProductID == id).FirstOrDefault();
+			if (cartitem.Quantati > 1)
+			{
+				--cartitem.Quantati;
+			}
+			else
+			{
+				Cart.RemoveAll(x => x.ProductID == id);
+			}
 
+			if (Cart.Count == 0)
+			{
+				HttpContext.Session.Remove("Cart");
+			}
+			else
+			{
+				HttpContext.Session.Setjson("Cart", Cart);
+			}
+			TempData["success"] = "Giảm số lượng sản phẩm thành công !";
+			return RedirectToAction("index");
+		}
+		public async Task<IActionResult> Delete(int id)
+		{
+
+			List<CartItemModel> Cart = HttpContext.Session.Getjson<List<CartItemModel>>("Cart");
+			CartItemModel cartitem = Cart.Where(x => x.ProductID == id).FirstOrDefault();
+			Cart.RemoveAll(x => x.ProductID == id);
+			if (Cart.Count == 0)
+			{
+				HttpContext.Session.Remove("Cart");
+			}
+			else
+			{
+				HttpContext.Session.Setjson("Cart", Cart);
+			}
+			TempData["success"] = "Đã xóa sản phẩm !";
+			return RedirectToAction("index");
+		}
+		public async Task<IActionResult> Clear()
+		{
+			HttpContext.Session.Remove("Cart");
+			TempData["success"] = "Đã Clear giỏ hàng !";
+			return RedirectToAction("index");
+		}
+	}
+	
 }
