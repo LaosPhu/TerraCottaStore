@@ -9,6 +9,8 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Views\Login\" />
+    <Folder Include="wwwroot\backend\css\" />
+    <Folder Include="wwwroot\backend\images\" />
   </ItemGroup>
 
   <ItemGroup>

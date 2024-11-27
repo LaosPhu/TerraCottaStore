@@ -10,7 +10,7 @@ namespace TerraCottaStore.Models
 		public string Name { get; set; }
 		[Required, MinLength(4, ErrorMessage = "Yêu cầu nhập mô tả Brand")]
 		public string Description { get; set; }
-		[Required]
+		
 		public string slug { get; set; }
 		public int status { get; set; }	
 

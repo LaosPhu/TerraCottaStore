@@ -1,47 +1,46 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TerraCottaStore.Models;
 using TerraCottaStore.Repository;
 
 namespace TerraCottaStore.Areas.Admin.Controllers
 {
-	[Area("Admin")]
-	public class CategoryController : Controller
-	{
-		private readonly DataContext _datacontext;
+    [Area("Admin")]
+    public class BrandController : Controller
+    {
+        private readonly DataContext _datacontext;
 
-		public CategoryController(DataContext dataContext)
-		{
-			_datacontext = dataContext;
-		}
-		public async Task<IActionResult> Index()
-		{
-			return View(await _datacontext.Categories.OrderByDescending(p => p.Id).ToListAsync());
-		}
+        public BrandController(DataContext dataContext ) 
+        {
+         _datacontext = dataContext;
+        }   
+
+        public async Task <IActionResult> Index()
+        {
+            return View(await _datacontext.Brands.OrderByDescending(p => p.Id).ToListAsync());
+        }
         public IActionResult Create()
         {
-           
+
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CategoryModel category)
+        public async Task<IActionResult> Create(BrandModel brand)
         {
-            
+
             if (ModelState.IsValid)
             {
-                category.Slug = category.Name.Replace(" ", "-");
-                var Slug = await _datacontext.Categories.FirstOrDefaultAsync(x => x.Slug == category.Slug);
+                brand.slug = brand.Name.Replace(" ", "-");
+                var Slug = await _datacontext.Brands.FirstOrDefaultAsync(x => x.slug == brand.slug);
                 if (Slug != null)
                 {
                     ModelState.AddModelError("", "Danh mục đã có trong hệ thống");
-                    return View(category);
+                    return View(brand);
                 }
-                
-               
-                _datacontext.AddAsync(category);
+
+
+                _datacontext.AddAsync(brand);
                 await _datacontext.SaveChangesAsync();
 
                 TempData["success"] = "add successfully!";
@@ -62,40 +61,41 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             }
 
 
-            return View(category);
+            return View(brand);
         }
         public async Task<IActionResult> delete(int id)
         {
-            CategoryModel category = await _datacontext.Categories.FindAsync(id);
+            BrandModel brand = await _datacontext.Brands.FindAsync(id);
 
-           
-            _datacontext.Categories.Remove(category);
+
+            _datacontext.Brands.Remove(brand);
             await _datacontext.SaveChangesAsync();
             TempData["error"] = "Delete suceesful!";
 
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Edit(int id)
-        {   CategoryModel category = await _datacontext.Categories.FindAsync(id);
-            return View(category);
+        {
+            BrandModel brand = await _datacontext.Brands.FindAsync(id);
+            return View(brand);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CategoryModel category)
+        public async Task<IActionResult> Edit(BrandModel brand)
         {
 
             if (ModelState.IsValid)
             {
-                category.Slug = category.Name.Replace(" ", "-");
-                var Slug = await _datacontext.Categories.FirstOrDefaultAsync(x => x.Slug == category.Slug);
+                brand.slug = brand.Name.Replace(" ", "-");
+                var Slug = await _datacontext.Brands.FirstOrDefaultAsync(x => x.slug == brand.slug);
                 if (Slug != null)
                 {
                     ModelState.AddModelError("", "Danh mục đã có trong hệ thống");
-                    return View(category);
+                    return View(brand);
                 }
 
 
-                _datacontext.Update(category);
+                _datacontext.Update(brand);
                 await _datacontext.SaveChangesAsync();
 
                 TempData["success"] = "add successfully!";
@@ -116,15 +116,15 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             }
 
 
-            return View(category);
+            return View(brand);
         }
         public async Task<IActionResult> Shutdown(int id)
         {
-            CategoryModel category = await _datacontext.Categories.FindAsync(id);
+            BrandModel brand = await _datacontext.Brands.FindAsync(id);
 
 
-            category.status = 0;
-            _datacontext.Categories.Update(category);
+            brand.status = 0;
+            _datacontext.Brands.Update(brand);
             await _datacontext.SaveChangesAsync();
             TempData["error"] = "Setoff suceesful!";
 
@@ -132,11 +132,11 @@ namespace TerraCottaStore.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Turnon(int id)
         {
-            CategoryModel category = await _datacontext.Categories.FindAsync(id);
+            BrandModel brand = await _datacontext.Brands.FindAsync(id);
 
 
-            category.status = 1;
-            _datacontext.Categories.Update(category);
+            brand.status = 1;
+            _datacontext.Brands.Update(brand);
             await _datacontext.SaveChangesAsync();
             TempData["success"] = "turn on suceesful!";
 

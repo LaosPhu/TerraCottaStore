@@ -38,7 +38,6 @@ namespace TerraCottaStore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("slug")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("status")
@@ -66,7 +65,6 @@ namespace TerraCottaStore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Slug")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("status")
