@@ -32,9 +32,9 @@ namespace TerraCottaStore.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task <IActionResult> Create(ProductModel product)
         {
-            ViewBag.Category = new SelectList(_datacontext.Categories, "Id", "Name");
-            ViewBag.Brand = new SelectList(_datacontext.Brands, "Id", "Name");
-            if( ModelState.IsValid)
+            ViewBag.Categories = new SelectList(_datacontext.Categories, "Id", "Name",product.CategoryID);
+            ViewBag.Brands = new SelectList(_datacontext.Brands, "Id", "Name",product.BrandID);
+            if ( ModelState.IsValid)
             {
                 product.Slug = product.Name.Replace(" ", "-");
                 var Slug =await _datacontext.Products.FirstOrDefaultAsync(x=> x.Slug==product.Slug);
@@ -47,16 +47,18 @@ namespace TerraCottaStore.Areas.Admin.Controllers
                     if (product.imageupload!=null)
                     {
                         string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath,"media/products");
-                        string imagename = Guid.NewGuid().ToString() +"_"+product.imageupload.FileName;
+                        string imagename = Guid.NewGuid().ToString() + "_" +product.imageupload.FileName;
                         string filepath = Path.Combine(uploadsDir, imagename);
+
                         FileStream fs = new FileStream(filepath, FileMode.Create);
                         await product.imageupload.CopyToAsync(fs);
                         fs.Close();
                         product.image=imagename;
                     }
-                
-                _datacontext.Add(product);
-                _datacontext.SaveChangesAsync();
+                product.status = 1; 
+                _datacontext.AddAsync(product);
+               await _datacontext.SaveChangesAsync();
+
                 TempData["success"] = "add successfully!";
                 return RedirectToAction("Index");
 
