@@ -6,6 +6,7 @@
 <h4>Gior Hanng</h4>
 @{
 }
+
 <section id="cart_items">
 	<div class="container">
 		<div class="breadcrumbs">
@@ -35,7 +36,7 @@
 						<tbody>
 							<tr>
 								<td class="cart_product">
-									<a><img src="~/images/@item.image" alt="@item.ProductName" width="80px"></a>
+									<a><img src="~/media/products/@item.image" alt="@item.ProductName" width="80px"></a>
 								</td>
 								<td class="cart_description">
 									<h4><a href="">@item.ProductName</a></h4>
@@ -74,8 +75,10 @@
 						
 				}
 				else
-				{
-					<h4> Your cart is empty !</h4>
+				{ <tr>
+						<td colspan="4"><h4> Your cart is empty !</h4></td>
+				</tr>
+					
 				}
 			</table>
 		</div>

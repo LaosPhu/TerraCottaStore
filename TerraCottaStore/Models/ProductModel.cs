@@ -23,10 +23,10 @@ namespace TerraCottaStore.Models
 		public CategoryModel Category { get; set; }
 		public BrandModel Brand { get; set; }
 		public string Slug {  get; set; }
-		public string image { get; set; } = "noimage.jpg";
+		public string image { get; set; }
 		public int status { get; set; }
 		[NotMapped]
 		[FileExtension]
-		public IFormFile imageupload { get; set; }
+		public IFormFile? imageupload { get; set; }
 	}
 }

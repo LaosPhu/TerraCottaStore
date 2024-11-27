@@ -8,6 +8,7 @@
     <thead>
         <tr>
             <th scope="col">#</th>
+            <th scope="col">Status</th>
             <th scope="col">Name</th>
             <th scope="col">Desciption</th>
             <th scope="col">Price</th>
@@ -22,10 +23,20 @@
     <tbody>
         @foreach (var item in Model)
         {
+            
             <tr>
                 <th scope="row">@item.Id</th>
+                @if (item.status==1)
+                {
+                <td>Item is on</td>
+                }
+                else
+
+                {
+                <td>Item is shutdowm</td>
+                }
                 <td>@item.Name</td>
-                <td>@item.Description</td>
+                <td>@Html.Raw(item.Description)</td>
                 <td>@item.Price</td>
                 <td><img src="~/media/products/@item.image" width="120px"><br>@item.image</td>
                 <td>@item.Slug</td>
@@ -40,8 +51,19 @@
                     <td>Không hiển thị</td>
                 }
                 <td>
-                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Product" asp-all-route-id="@item.Id">Edit</a>
-                    <a class="btn btn-danger btn-sm" asp-action="Shut Down" asp-controller="Product" asp-all-route-id="@item.Id">Set off</a>
+                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-action="delete" asp-controller="Product" asp-route-id="@item.Id">Delete</a>
+                    
+                    @if (item.status==1)
+                    {
+                        <a class="btn btn-danger btn-sm" asp-action="Shutdown" asp-controller="Product" asp-route-id="@item.Id">Set off</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger btn-sm" asp-action="Onlive" asp-controller="Product" asp-route-id="@item.Id">Set on</a>
+
+                    }
+
                 </td>
 
             </tr>
