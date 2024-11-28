@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TerraCottaStore.Models;
 using TerraCottaStore.Repository;
@@ -6,6 +7,7 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class BrandController : Controller
     {
         private readonly DataContext _datacontext;

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TerraCottaStore.Models;
+using TerraCottaStore.Models.ViewModel;
 using TerraCottaStore.Repository;
 
 namespace TerraCottaStore.Controllers
@@ -15,13 +16,30 @@ namespace TerraCottaStore.Controllers
 		 _signInManager = signinmanage;
 			_usermange = username;
 		}
-		public IActionResult Index()
+		
+		public IActionResult Login(string returnURL)
 		{
-			return View();
+			return View(new LoginViewModel { returnURL=returnURL});
 		}
-		public async Task <IActionResult> Login()
+		[HttpPost]
+		public async Task<IActionResult> Login(LoginViewModel loginVM)
 		{
-			return View();
+			if (ModelState.IsValid)
+			{
+				Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(loginVM.Userame, loginVM.Password, false, false);
+				if (result.Succeeded)
+				{
+					return Redirect(loginVM.returnURL ?? "/");
+				}
+				ModelState.AddModelError("", "Sự cố khi đăng nhập");
+			}
+
+			return View(loginVM);
+		}
+		public async Task <IActionResult> Logout (string returnURL)
+		{
+			await _signInManager.SignOutAsync();
+			return Redirect(returnURL="/");
 		}
 		public IActionResult Create()
 		{
@@ -39,10 +57,11 @@ namespace TerraCottaStore.Controllers
 					Email = user.Email,
 
 				};
-				IdentityResult result = await _usermange.CreateAsync(newuser);
+				IdentityResult result = await _usermange.CreateAsync(newuser,user.Password);
 				if (result.Succeeded)
 				{
-					return RedirectToAction("Index", "Home");
+					TempData["success"] = "Tao user thanh cong";
+					return Redirect("/account/login");
 				}
 				foreach (IdentityError error in result.Errors)
 				{

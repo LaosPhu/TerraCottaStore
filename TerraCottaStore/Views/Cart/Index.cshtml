@@ -26,7 +26,10 @@
 						<td class="price">Price</td>
 						<td class="quantity">Quantity</td>
 						<td class="total">Total</td>
-						<td></td>
+						<td> #</td>
+							<td> </td>
+							<td> </td>
+						
 					</tr>
 				</thead>
 				
@@ -50,7 +53,7 @@
 									<a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.ProductID"> + </a>
 										<input class="cart_quantity_input" type="text" name="quantity" value="@item.Quantati" autocomplete="off" size="2">
 									<a class="btn btn-success btn-sm" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductID"> - </a>
-										<a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Delete" asp-route-id="@item.ProductID"> X </a>
+										
 								
 								</td>
 								<td class="cart_total">
@@ -58,7 +61,7 @@
 								
 								</td>
 								<td class="cart_delete">
-									<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+									<a asp-controller ="Cart" asp-action="Delete" asp-route-id="@item.ProductID"><i class="fa fa-times"></i></a>
 								</td>
 							</tr>
 							
@@ -68,9 +71,22 @@
 						</tbody>
 					}
 
-					<tr>
+					<tr >
 						<td colspan="6">Tổng :<p class="cart_total_price">@Model.GrandTotal.ToString("N0") VND</p></td>
 						<td><a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Clear"> Clear </a> </td>
+						@if (User.Identity?.IsAuthenticated ?? false)
+						{
+							<td><a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Checkout"> Checkout </a> </td>
+						}
+						else
+						{
+							<td>
+								<li><a class="btn btn-default btn-sm" asp-action="Login" asp-controller="Account"><i class="fa fa-lock"></i> Login</a> </li>
+								
+							</td>
+							
+							
+						}
 					</tr>
 						
 				}
