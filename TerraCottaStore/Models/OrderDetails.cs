@@ -4,10 +4,10 @@
 	{
 		public int Id { get; set; }
 		public string UserName { get; set; }
-		public int OrderCode { get; set; }
+		public string OrderCode { get; set; }
 		public int ProductId { get; set; }
 
-		public string Price { get; set; }
+		public decimal  Price { get; set; }
 
 		public int Quantati {  get; set; }
 

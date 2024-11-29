@@ -12,8 +12,8 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241128181736_CreateCheckout")]
-    partial class CreateCheckout
+    [Migration("20241129183413_TerraCottaDB")]
+    partial class TerraCottaDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -288,8 +288,8 @@ namespace TerraCottaStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OrderCode")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Price")
                         .HasColumnType("nvarchar(max)");
@@ -319,8 +319,8 @@ namespace TerraCottaStore.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OrderCode")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

@@ -285,11 +285,11 @@ namespace TerraCottaStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OrderCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Price")
+                    b.Property<string>("OrderCode")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -316,8 +316,8 @@ namespace TerraCottaStore.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OrderCode")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
