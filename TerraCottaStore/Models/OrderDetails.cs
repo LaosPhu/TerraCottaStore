@@ -1,4 +1,6 @@
-﻿namespace TerraCottaStore.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TerraCottaStore.Models
 {
 	public class OrderDetails
 	{
@@ -10,7 +12,8 @@
 		public decimal  Price { get; set; }
 
 		public int Quantati {  get; set; }
-
+		[ForeignKey("ProductId")]
+		public ProductModel Product { get; set; }
 
 	}
 }

@@ -55,6 +55,7 @@ namespace TerraCottaStore.Controllers
 				{
 					UserName = user.Userame,
 					Email = user.Email,
+					PhoneNumber = user.PhoneNumber,
 
 				};
 				IdentityResult result = await _usermange.CreateAsync(newuser,user.Password);

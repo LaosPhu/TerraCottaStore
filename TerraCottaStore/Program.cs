@@ -36,7 +36,6 @@ builder.Services.Configure<IdentityOptions>(options =>
 	options.Password.RequiredLength = 4;
 	
 
-
 	
 	options.User.RequireUniqueEmail = true;
 });
@@ -45,7 +44,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 var app = builder.Build();
 //404
-app.UseStatusCodePagesWithRedirects("/Home/Error?statuscode={0}");
+//app.UseStatusCodePagesWithRedirects("/Home/Error?statuscode={0}");
 //
 app.UseSession();
 
