@@ -28,6 +28,7 @@ namespace TerraCottaStore.Areas.Admin.Controllers
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
+           await _appusermodel.Users.OrderByDescending(p => p.Id).Include(r => r.RoleId).ToListAsync();
             return View(await _appusermodel.Users.OrderByDescending(p=>p.Id).ToListAsync());
         }
 
@@ -51,7 +52,19 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             {
                 var creatUserResult = await _appusermodel.CreateAsync(user,user.PasswordHash);
                 if (creatUserResult.Succeeded)
-                {
+                {   
+                    var createUser =await _appusermodel.FindByEmailAsync(user.Email);
+                    var userId = createUser.Id;
+                    var roleU = await _rolemanger.FindByIdAsync(user.RoleId);
+                    var addrolerResult = await _appusermodel.AddToRoleAsync(createUser, roleU.Name);
+                    if (!addrolerResult.Succeeded)
+                    {
+                        foreach (var error in creatUserResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+
+                    }
                     return RedirectToAction("Index","User");
                 }else
                 {
@@ -77,7 +90,90 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             ViewBag.Roles = new SelectList(role, "Id", "Name");
             return View(user);
         }
-        
+        [HttpGet]
+
+        [Route("Delete")]
+        public async Task<IActionResult> Delete(string Id)
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                return NotFound();
+
+            }
+            var user = await _appusermodel.FindByIdAsync(Id);
+            if (user != null)
+            {
+                var deleteresult = await _appusermodel.DeleteAsync(user);
+                if (!deleteresult.Succeeded)
+                {
+                    return View("Error");
+                }
+            }
+            TempData["success"] = "Delete successfully!";
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+
+        [Route("Edit")]
+
+        public async Task<IActionResult> Edit (string Id)
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                return NotFound();
+
+            }
+            var user = await _appusermodel.FindByIdAsync(Id);
+            if (user == null)
+            {   
+                return NotFound();
+            }
+            var role = await _rolemanger.Roles.ToListAsync();
+            ViewBag.Roles = new SelectList(role, "Id", "Name");
+            return View(user);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Edit")]
+
+        public async Task<IActionResult> Edit(string Id,AppUserModel user)
+        {   
+            var exitinguser = await _appusermodel.FindByIdAsync(Id);
+            if (exitinguser == null)
+            {
+                return NotFound();
+
+            }
+            if (ModelState.IsValid)
+            {
+                exitinguser.UserName = user.UserName;
+                exitinguser.Email = user.Email;
+                exitinguser.PhoneNumber = user.PhoneNumber;
+                exitinguser.RoleId = user.RoleId;
+
+            }
+            var updateresult = await _appusermodel.UpdateAsync(exitinguser);
+            if (updateresult.Succeeded)
+            {
+                return RedirectToAction("Index", "User");
+            }
+            else
+            {
+                foreach (var errorr in updateresult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, errorr.Description);
+                }
+            }
+            
+            var role = await _rolemanger.Roles.ToListAsync();
+            ViewBag.Roles = new SelectList(role, "Id", "Name");
+
+            TempData["error"] = "Model vadidation broke !";
+            var error = ModelState.Values.SelectMany(x => x.Errors.Select(e => e.ErrorMessage)).ToList();
+            string erromassage = string.Join("\n", error);
+            return View(user);
+        }
+
 
     }
 
