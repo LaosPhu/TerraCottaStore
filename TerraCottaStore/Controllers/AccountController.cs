@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using TerraCottaStore.Models;
 using TerraCottaStore.Models.ViewModel;
 using TerraCottaStore.Repository;
@@ -11,11 +12,14 @@ namespace TerraCottaStore.Controllers
 	
 		private UserManager<AppUserModel> _usermange;
 		private SignInManager<AppUserModel> _signInManager;
-		public AccountController(UserManager<AppUserModel>	username, SignInManager<AppUserModel> signinmanage)
+        private readonly RoleManager<IdentityRole> _rolemanger;
+        public AccountController(UserManager<AppUserModel>	username, SignInManager<AppUserModel> signinmanage, RoleManager<IdentityRole> rolemanger)
 		{
 		 _signInManager = signinmanage;
 			_usermange = username;
-		}
+            _rolemanger = rolemanger;
+
+        }
 		
 		public IActionResult Login(string returnURL)
 		{
@@ -48,20 +52,23 @@ namespace TerraCottaStore.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(UserModel user)
-		{
-			if (ModelState.IsValid)
+		{  var role = await _rolemanger.FindByNameAsync("User");
+            user.RoleId = role.Id;
+            if (ModelState.IsValid)
 			{
 				AppUserModel newuser = new AppUserModel
 				{
 					UserName = user.Userame,
 					Email = user.Email,
 					PhoneNumber = user.PhoneNumber,
-
+					RoleId = user.RoleId
 				};
-				IdentityResult result = await _usermange.CreateAsync(newuser,user.Password);
+
+				IdentityResult result = await _usermange.CreateAsync(newuser, user.Password);
 				if (result.Succeeded)
-				{
-					TempData["success"] = "Tao user thanh cong";
+				{	
+                    var addrolerResult = await _usermange.AddToRoleAsync(newuser, "User");
+                    TempData["success"] = "Tao user thanh cong";
 					return Redirect("/account/login");
 				}
 				foreach (IdentityError error in result.Errors)

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using TerraCottaStore.Models;
 
@@ -25,5 +26,46 @@ namespace TerraCottaStore.Repository
 
           
 		}
-	}
+        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        {
+            var roles = new List<string>
+        {
+            "Admin",
+            "Manager",
+            "User"
+        };
+
+            foreach (var roleName in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(roleName))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+        }
+
+        public static async Task SeedUsersAsync(UserManager<AppUserModel> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            var role = await roleManager.FindByNameAsync("User");
+            
+            var defaultUser = new AppUserModel
+            {
+                UserName = "admin",
+                Email = "admin@example.com",
+                EmailConfirmed = true,
+                RoleId = role.Id,
+                
+               
+            };
+
+            if (await userManager.FindByEmailAsync(defaultUser.Email) == null)
+            {
+                var createUserResult = await userManager.CreateAsync(defaultUser, "Password@123");
+                if (createUserResult.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(defaultUser, "Admin");
+                }
+            }
+        }
+    }
 }

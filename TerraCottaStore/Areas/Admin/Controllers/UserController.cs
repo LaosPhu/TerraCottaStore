@@ -28,7 +28,7 @@ namespace TerraCottaStore.Areas.Admin.Controllers
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-           await _appusermodel.Users.OrderByDescending(p => p.Id).Include(r => r.RoleId).ToListAsync();
+           await _appusermodel.Users.OrderByDescending(p => p.Id).Include(r => r.Role).ToListAsync();
             return View(await _appusermodel.Users.OrderByDescending(p=>p.Id).ToListAsync());
         }
 

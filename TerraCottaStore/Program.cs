@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TerraCottaStore.Models;
 using TerraCottaStore.Repository;
@@ -79,4 +79,23 @@ app.MapControllerRoute(
 //Seeding data
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>(); 
     SeedData.SeedingData(context);
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = services.GetRequiredService<UserManager<AppUserModel>>();
+
+        // Seed dữ liệu
+        await SeedData.SeedRolesAsync(roleManager);
+        await SeedData.SeedUsersAsync(userManager, roleManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
 app.Run();
