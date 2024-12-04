@@ -44,14 +44,14 @@ namespace TerraCottaStore.Controllers
 				}
 				HttpContext.Session.Remove("Cart");
 				TempData["success"] = "Tao don hang thanh cong";
-				emailpos();
+				emailpos(userEmail);
                 return RedirectToAction("Index","Cart");
 			}
 			return View();
 		}
-		public async void emailpos ()
-		{
-            var receiver = "nhuhanlam@gmail.com";
+		public async void emailpos (string email)
+		{	
+            var receiver = email;
             var subject = "Thinh dep trai";
             var Message = "test sever";
             await _emailSender.SendEmailAsync(receiver, subject, Message);
