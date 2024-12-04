@@ -10,8 +10,8 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize]
-	public class ProductController : Controller
+    [Authorize(Roles = "Admin,Author")]
+    public class ProductController : Controller
     {
         private readonly DataContext _datacontext;
         private readonly IWebHostEnvironment _webHostEnvironment;

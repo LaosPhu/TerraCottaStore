@@ -6,7 +6,7 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin,Author")]
     public class OrderController : Controller
 	{
         private readonly DataContext _datacontext;

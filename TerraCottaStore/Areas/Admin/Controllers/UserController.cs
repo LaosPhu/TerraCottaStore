@@ -10,7 +10,7 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize]
+    [Authorize(Roles = "Admin,Author")]
     [Route("Admin/User")]
 	public class UserController : Controller
     {

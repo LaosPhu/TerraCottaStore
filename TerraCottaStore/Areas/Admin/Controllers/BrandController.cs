@@ -7,7 +7,7 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles ="Admin,Author")]
     public class BrandController : Controller
     {
         private readonly DataContext _datacontext;
@@ -15,12 +15,34 @@ namespace TerraCottaStore.Areas.Admin.Controllers
         public BrandController(DataContext dataContext ) 
         {
          _datacontext = dataContext;
-        }   
+        }
 
-        public async Task <IActionResult> Index()
+        /*public async Task <IActionResult> Index()
         {
             return View(await _datacontext.Brands.OrderByDescending(p => p.Id).ToListAsync());
+        }*/
+        public async Task<IActionResult> Index(int pg = 1)
+        {   var list = await _datacontext.Brands.ToListAsync();
+            const int pageSize = 10; //10 items/trang
+
+            if (pg < 1) //page < 1;
+            {
+                pg = 1; //page ==1
+            }
+            int recsCount = list.Count();
+
+            var pager = new Paginate(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = list.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+
+            return View(data);
+            
         }
+
         public IActionResult Create()
         {
 
