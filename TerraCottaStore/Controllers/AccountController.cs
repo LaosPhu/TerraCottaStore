@@ -1,24 +1,24 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
+using TerraCottaStore.Areas.Admin.Repository;
 using TerraCottaStore.Models;
 using TerraCottaStore.Models.ViewModel;
-using TerraCottaStore.Repository;
 
 namespace TerraCottaStore.Controllers
 {
-	public class AccountController : Controller
+    public class AccountController : Controller
 	{
 	
 		private UserManager<AppUserModel> _usermange;
 		private SignInManager<AppUserModel> _signInManager;
         private readonly RoleManager<IdentityRole> _rolemanger;
-        public AccountController(UserManager<AppUserModel>	username, SignInManager<AppUserModel> signinmanage, RoleManager<IdentityRole> rolemanger)
+		private readonly IEmailSender _emailSender;
+        public AccountController(IEmailSender emailSender,UserManager<AppUserModel>	username, SignInManager<AppUserModel> signinmanage, RoleManager<IdentityRole> rolemanger)
 		{
 		 _signInManager = signinmanage;
 			_usermange = username;
             _rolemanger = rolemanger;
-
+			_emailSender = emailSender;
         }
 		
 		public IActionResult Login(string returnURL)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TerraCottaStore.Areas.Admin.Repository;
 using TerraCottaStore.Models;
 using TerraCottaStore.Repository;
 
@@ -9,6 +10,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration["ConnectionStrings:ConnedtedDb"]);
 });
+//add mail-service 
+builder.Services.AddTransient<IEmailSender,EmailSender>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 // sessioon builder
