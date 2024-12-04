@@ -45,15 +45,23 @@
 						<span>@(((int)Model.Price).ToString("N0")) VND</span>
 						<label>Quantity:</label>
 						<input type="text" value="3" />
-						<a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model.Id">
-							<i class="fa fa-shopping-cart"></i>
-							Add to cart
+						@*<a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model.Id">*@
+						
+							
 						</a>
 					</span>
 					<p><b>Availability:</b> In Stock</p>
 					<p><b>Condition:</b> New</p>
 					<p><b>Brand:</b> @Model.Brand.Name</p>
 					<p><b>Category:</b> @Model.Category.Name</p>
+					<p>
+						<b>
+							<button class="btn btn-default add-to-cart" data-product_id="@Model.Id">
+								<i class="fa fa-shopping-cart"></i>
+								Thêm vào giỏ hàng !
+							</button>
+						</b>
+					</p>
 				</div><!--/product-information-->
 			</div>
 		</div><!--/product-details-->
@@ -297,3 +305,51 @@
 
 	</div>
 </div>
+@section Scripts {
+	<script>
+		$(document).ready(function ()
+		{
+			$('.add-to-cart').click(function () {
+				var Id = $(this).data("product_id");
+
+
+
+				$.ajax({
+
+				type: "POST",
+				url: "@Url.Action("Add", "Cart")",
+				data: { Id :Id },
+
+				success: function (result)
+				{
+				if (result.success)
+				{
+							Swal.fire({
+								position: "top-end",
+								icon: "success",
+								title: "Product add to cart !",
+								showConfirmButton: false,
+								timer: 1500
+							});
+				}
+				else
+				{
+							Swal.fire({
+								icon: "error",
+								title: "add to cart fail",
+								text: "Something went wrong!",
+
+							});
+				}
+				},
+				error: function (req ,status,error )
+				{
+				console.error("Error updating order", error);
+				}
+				})
+
+
+			})
+		})
+	</script>
+}

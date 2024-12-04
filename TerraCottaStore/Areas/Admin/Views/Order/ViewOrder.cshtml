@@ -82,11 +82,22 @@
                 {
                 if (result.success)
                 {
-                swal.fire("Updated order");
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Order status updated",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
                 }
                 else
                 {
-                swal.fire("Updated fail");
+                            Swal.fire({
+                                icon: "error",
+                                title: "Order update fail",
+                                text: "Something went wrong!",
+                               
+                            });
                 }
                 },
                 error: function (req ,status,error )

@@ -25,8 +25,10 @@ namespace TerraCottaStore.Controllers
 		}	
 		
 		public async Task<IActionResult>  Add (int id)
-		{
-			ProductModel product =await _datacontext.Products.FindAsync(id);
+        {
+            try
+            {
+                ProductModel product =await _datacontext.Products.FindAsync(id);
 			List <CartItemModel> Cart = HttpContext.Session.Getjson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
 			CartItemModel cartItem = Cart.Where( x => x.ProductID == id).FirstOrDefault();
 			if (cartItem == null)
@@ -38,8 +40,15 @@ namespace TerraCottaStore.Controllers
 				cartItem.Quantati += 1;
 			}
 			HttpContext.Session.Setjson("Cart",Cart);
-
-			TempData["success"] = "Thêm sản phẩm vào giỏ hàng !";
+           
+                
+                return Ok(new { success = true, message = "Order update successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error has occur");
+            }
+            TempData["success"] = "Thêm sản phẩm vào giỏ hàng !";
 			return Redirect(Request.Headers["Referer"].ToString()) ;
 		}
 		public IActionResult Checkout()
