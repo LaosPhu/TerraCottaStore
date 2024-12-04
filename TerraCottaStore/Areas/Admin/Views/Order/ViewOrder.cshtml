@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<OrderDetails>
 @{
     ViewData["title"] = "Orderdetail";
+    decimal subtotal =0;
+    decimal total = 0;
 }
 <h3>Order  detail </h3>
 
@@ -11,22 +13,25 @@
 
             <th scope="col">Name</th>
             <th scope="col">Image</th>
-
             <th scope="col">Price</th>
             <th scope="col">Quantati</th>
+            <th scope="col">Subtotal</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-
+            subtotal = item.Quantati * item.Price;
+            total += subtotal;
             <tr>
+                <input type="hidden" asp-for="@item.OrderCode" class="getId" />
                 <th scope="row">@item.Id</th>
 
                 <td>@item.Product.Name</td>
                 <td><img src="~/media/products/@item.Product.image" width="120px"><br>@item.Product.image</td>
-                <td>@item.Price</td>
+                <td>$@item.Price</td>
                 <td>@item.Quantati</td>
+                <td>@subtotal.ToString("C")</td>
                 
                 <td>
                     <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id">Edit</a>
@@ -38,8 +43,59 @@
 
             </tr>
         }
-   
+        <tr>
+            <th colspan="5">Total:</th>
+            <td>@total.ToString("C")</td>
+            <td>
+                <select class="form-control select-update-order">
+                    <option value="1">
+                        Đơn hàng mới
+                    </option>
+                    <option value="2">
+                        Đơn hàng đã xử lý
+                    </option>
+                </select>
+            </td>
+        </tr>
+           
 
 
     </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () 
+        { 
+            $('.select-update-order').change(function(){   
+                var status = $(this).val();
+                var ordercode = $('.getId').val();
+           
+               
+                $.ajax({
+
+                type: "POST",
+                url: "@Url.Action("UpdateOrder")",
+                data: { status: status, ordercode: ordercode },
+
+                success: function (result)
+                {
+                if (result.success)
+                {
+                swal.fire("Updated order");
+                }
+                else
+                {
+                swal.fire("Updated fail");
+                }
+                },
+                error: function (req ,status,error )
+                {
+                console.error("Error updating order", error);
+                }
+                })
+               
+            })
+        })
+    </script>
+}

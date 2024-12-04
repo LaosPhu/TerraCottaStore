@@ -8,7 +8,8 @@ namespace TerraCottaStore.Areas.Admin.Controllers
 {
 	[Area("Admin")]
 	[Authorize(Roles = "Admin,Author")]
-	public class RoleController : Controller
+    
+    public class RoleController : Controller
 	{
 		private readonly RoleManager<IdentityRole> _rolemanger;
 		public RoleController(RoleManager<IdentityRole> rolemanager)

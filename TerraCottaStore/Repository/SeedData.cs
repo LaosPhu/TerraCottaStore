@@ -46,7 +46,7 @@ namespace TerraCottaStore.Repository
 
         public static async Task SeedUsersAsync(UserManager<AppUserModel> userManager, RoleManager<IdentityRole> roleManager)
         {
-            var role = await roleManager.FindByNameAsync("User");
+            var role = await roleManager.FindByNameAsync("Admin");
             
             var defaultUser = new AppUserModel
             {

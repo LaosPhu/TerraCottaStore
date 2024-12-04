@@ -7,6 +7,7 @@ namespace TerraCottaStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin,Author")]
+    
     public class OrderController : Controller
 	{
         private readonly DataContext _datacontext;
@@ -25,6 +26,27 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             var detailorder = await _datacontext.OrderDetails.Include(dt => dt.Product).Where(d=>d.OrderCode==ordercode).ToListAsync();
 
             return View(detailorder);
+        }
+        [HttpPost]
+       
+        public async Task<IActionResult> UpdateOrder(int status,string ordercode)
+        {
+          var order = await _datacontext.Orders.FirstOrDefaultAsync(o => o.OrderCode==ordercode);
+            if (order == null)
+            {
+                return  NotFound();
+
+            }
+            order.Status = status;
+            try
+            {
+                await _datacontext.SaveChangesAsync();
+                return Ok(new { success = true, message = "Order update successfully" });
+            }
+            catch (Exception ex)
+            { 
+                return StatusCode(500,"An error has occur");
+            }
         }
     }
 }
