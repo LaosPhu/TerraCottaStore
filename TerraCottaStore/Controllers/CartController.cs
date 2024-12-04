@@ -38,7 +38,8 @@ namespace TerraCottaStore.Controllers
 				cartItem.Quantati += 1;
 			}
 			HttpContext.Session.Setjson("Cart",Cart);
-			
+
+			TempData["success"] = "Thêm sản phẩm vào giỏ hàng !";
 			return Redirect(Request.Headers["Referer"].ToString()) ;
 		}
 		public IActionResult Checkout()
