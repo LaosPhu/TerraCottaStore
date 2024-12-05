@@ -18,8 +18,8 @@ namespace TerraCottaStore.Repository
                     CategoryModel Dining_room = new CategoryModel { Name = "Bàn ăn", Slug = "Dining-room", Description = "Dụng cụ bàn ăn", status = 1 };
 
                     _context.Products.AddRange(
-                        new ProductModel { Name = "Bình Gốm", Slug = "sp-binh-gom", Description = "Bình gốm Minh Long", image = "1.jpg", Brand = Minh_Long, Category = Ceramic_Pot, Price = 500000, status = 1 },
-                        new ProductModel { Name = "Chén Cổ", Slug = "sp-chen-co", Description = "Chén cổ Bát Tràng", image = "2.jpg", Brand = Bat_Trang, Category = Dining_room, Price = 240000, status = 1 }
+                        new ProductModel { Name = "Bình Gốm", Slug = "sp-binh-gom", Description = "Bình gốm Minh Long", image = "1.jpg",Quantity=10, Brand = Minh_Long, Category = Ceramic_Pot, Price = 500000, status = 1 },
+                        new ProductModel { Name = "Chén Cổ", Slug = "sp-chen-co", Description = "Chén cổ Bát Tràng", image = "2.jpg", Quantity = 10, Brand = Bat_Trang, Category = Dining_room, Price = 240000, status = 1 }
                     );
                     _context.SaveChanges();
                 }

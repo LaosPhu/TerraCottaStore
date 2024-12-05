@@ -1,4 +1,5 @@
-﻿<div class="row">
+﻿@model ProductModel
+<div class="row">
 	<div class="col-sm-3">
 		@Html.Partial("_SideBarPartial")
 	</div>
@@ -44,7 +45,7 @@
 					<span>
 						<span>@(((int)Model.Price).ToString("N0")) VND</span>
 						<label>Quantity:</label>
-						<input type="text" value="3" />
+						<input type="number" id="quantity" max="@Model.Quantity" value="1" />
 						@*<a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model.Id">*@
 						
 							
@@ -305,20 +306,26 @@
 
 	</div>
 </div>
+
 @section Scripts {
+	<script>
+		$(document).ready(function () {
+			
+		})
+	</script>
 	<script>
 		$(document).ready(function ()
 		{
 			$('.add-to-cart').click(function () {
 				var Id = $(this).data("product_id");
-
-
+				var Quantity = $('#quantity').val();
+				alert(Quantity);
 
 				$.ajax({
 
 				type: "POST",
-				url: "@Url.Action("Add", "Cart")",
-				data: { Id :Id },
+					url: "@Url.Action("Addmanydetail", "Cart")",
+				data: { Id :Id,Quantity :Quantity  },
 
 				success: function (result)
 				{

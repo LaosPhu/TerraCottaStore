@@ -26,7 +26,7 @@
 			ProductID = product.Id;
 			ProductName = product.Name;
 			Price = product.Price;
-			Quantati = 1;
+			Quantati = product.Quantity;
 			image = product.image;
 		}
 	}

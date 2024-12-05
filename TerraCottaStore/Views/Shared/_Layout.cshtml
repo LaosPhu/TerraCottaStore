@@ -387,6 +387,11 @@
 			if (message != '')
 				Swal.fire(message); 
 		})
+		$(function () {
+			var message = '@TempData["error"]';
+			if (message != '')
+				Swal.fire(message);
+		})
 	</script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>

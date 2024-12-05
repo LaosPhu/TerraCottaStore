@@ -22,7 +22,7 @@
 				<thead>
 					<tr class="cart_menu">
 						<td class="image">Item</td>
-						<td class="description"></td>
+						<td >Name</td>
 						<td class="price">Price</td>
 						<td class="quantity">Quantity</td>
 						<td class="total">Total</td>
@@ -50,10 +50,11 @@
 								</td>
 								<td class="cart_quantity">
 
-									<a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.ProductID"> + </a>
-										<input class="cart_quantity_input" type="text" name="quantity" value="@item.Quantati" autocomplete="off" size="2">
-									<a class="btn btn-success btn-sm" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductID"> - </a>
-										
+									@*<a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.ProductID"> </a>*@
+									<button class="btn btn-default increase-cart" data-product_id="@item.ProductID">+</button>
+									<input class="cart_quantity_input" type="text" data-product-id="@item.ProductID" value="@item.Quantati" autocomplete="off" size="2">
+									@*<a class="btn btn-success btn-sm" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductID"> - </a>*@
+									<button class="btn btn-warning degrease-cart" data-product_id="@item.ProductID">-</button>
 								
 								</td>
 								<td class="cart_total">
@@ -100,3 +101,90 @@
 		</div>
 	</div>
 </section>
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('.increase-cart').click(function () {
+				var Id = $(this).data("product_id");
+
+
+				$.ajax({
+
+					type: "POST",
+					url: "@Url.Action("Increase", "Cart")",
+					data: { id: Id },
+
+					success: function (result) {
+						if (result.success) {
+							$(`.cart_quantity_input[data-product-id="${result.productId}"]`).val(result.quantity);
+							
+						}
+						else {
+							Swal.fire({
+								icon: "error",
+								title: "add to cart fail",
+								text: "Something went wrong!",
+
+							});
+						}
+						
+					},
+					error: function (req, status, error) {
+						console.error("Error updating order", error);
+					}
+				})
+
+
+			})
+
+		})
+
+
+				
+	</script>
+	<script>
+		$(document).ready(function () {
+			$('.degrease-cart').click(function () {
+				var Id = $(this).data("product_id");
+
+				$.ajax({
+
+					type: "POST",
+					url: "@Url.Action("Decrease", "Cart")",
+					data: { id: Id },
+
+					success: function (result) {
+						
+						if (result.success) {
+							if (result.quantity != 0) {
+								$(`.cart_quantity_input[data-product-id="${result.productId}"]`).val(result.quantity);
+							}
+							else
+							{
+								location.reload();
+							}
+							
+							
+							 
+							
+						}
+						else {
+							Swal.fire({
+								icon: "error",
+								title: "add to cart fail",
+								text: "Something went wrong!",
+
+							});
+						}
+
+					},
+					error: function (req, status, error) {
+						console.error("Error updating order", error);
+					}
+				})
+
+
+			})
+		})
+	</script>
+}
