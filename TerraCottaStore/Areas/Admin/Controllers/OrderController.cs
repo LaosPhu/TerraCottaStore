@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TerraCottaStore.Models;
 using TerraCottaStore.Repository;
 
 namespace TerraCottaStore.Areas.Admin.Controllers
@@ -17,9 +18,27 @@ namespace TerraCottaStore.Areas.Admin.Controllers
 			_datacontext = dataContext;
 		 
 		}
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int pg=1)
 		{
-			return View(await _datacontext.Orders.OrderByDescending(p => p.Id).ToListAsync());
+            var list = await _datacontext.Orders.OrderByDescending(p => p.Id).ToListAsync();
+            const int pageSize = 10; //10 items/trang
+
+            if (pg < 1) //page < 1;
+            {
+                pg = 1; //page ==1
+            }
+            int recsCount = list.Count();
+
+            var pager = new Paginate(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = list.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+
+            return View(data);
+            return View(await _datacontext.Orders.OrderByDescending(p => p.Id).ToListAsync());
 		}
         public async Task<IActionResult> ViewOrder(string ordercode)
         {

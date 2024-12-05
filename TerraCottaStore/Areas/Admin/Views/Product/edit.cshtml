@@ -29,6 +29,14 @@
 
         </div>
         <div class="form-group">
+            <label>Quantati</label>
+
+            <input asp-for="Quantity" class="form-control" />
+
+            <span asp-validation-for="Quantity" class="text-danger" />
+
+        </div>
+        <div class="form-group">
             <label>Category</label>
             <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.Categories">
                 <option>--Chọn danh mục</option>
@@ -45,7 +53,7 @@
         </div>
         <div class="form-group">
             <label> Image</label>
-            <input asp-for="imageupload" class="form-control" />
+            <input asp-for="imageupload" class="form-control" />@Model.image
             <span asp-validation-for="imageupload" class="text-danger" />
             <img src="~/media/products/@Model.image" width="120">
         </div>

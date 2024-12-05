@@ -1,6 +1,13 @@
 ﻿@model IEnumerable<AppUserModel>
 @{
     ViewData["title"] = "User Listed";
+    Paginate pager = new Paginate();
+    int pageno = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageno = pager.CurrentPage;
+    }
 }
 <h3>List User</h3>
 <a asp-action="Create" asp-controller="User">Creat new user !</a>
@@ -46,3 +53,4 @@
 
     </tbody>
 </table>
+<partial name="_Paging" model="@pager" />

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TerraCottaStore.Areas.Admin.Repository;
 using TerraCottaStore.Models;
@@ -42,9 +43,20 @@ namespace TerraCottaStore.Controllers
 					_datacontext.Add(orederdetail);
 					_datacontext.SaveChanges();
 				}
-				HttpContext.Session.Remove("Cart");
+
+                foreach (var cart in cartItems)
+                { var productmodle = await _datacontext.Products.FirstOrDefaultAsync(p=> p.Id == cart.ProductID);
+					productmodle.Quantity -= cart.Quantati;
+					_datacontext.Update(productmodle);
+					await _datacontext.SaveChangesAsync();
+                }
+                HttpContext.Session.Remove("Cart");
 				TempData["success"] = "Tao don hang thanh cong";
 				emailpos(userEmail);
+
+
+
+
                 return RedirectToAction("Index","Cart");
 			}
 			return View();

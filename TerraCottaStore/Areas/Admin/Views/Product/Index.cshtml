@@ -1,6 +1,13 @@
 ﻿@model IEnumerable<ProductModel>
 @{
     ViewData["title"] = "Product Listed";
+    Paginate pager = new Paginate();
+    int pageno = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageno = pager.CurrentPage;
+    }
 }
 <h3>List Produtc</h3>
 <a  asp-action="Create" asp-controller="Product">Creat new product !</a>
@@ -16,6 +23,7 @@
             <th scope="col">Slug</th>
             <th scope="col">Category</th>
             <th scope="col">Brand</th>
+            <th scope="col">Quantati</th>
             <th scope="col">Status</th>
 
         </tr>
@@ -34,6 +42,7 @@
                 <td>@item.Slug</td>
                 <td>@item.Category.Name</td>
                 <td>@item.Brand.Name</td>
+                <td>@item.Quantity</td>
                 @if (@item.status == 1)
                 {
                     <td style="color:darkgreen">hiển thị</td>
@@ -64,3 +73,4 @@
        
     </tbody>
 </table>
+<partial name="_Paging" model="@pager" />

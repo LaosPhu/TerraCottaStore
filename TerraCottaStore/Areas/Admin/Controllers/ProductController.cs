@@ -20,9 +20,26 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             _datacontext = datacontex;
             _webHostEnvironment = webHostEnvironment;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg =1)
         {
-            return View(await _datacontext.Products.OrderByDescending(p => p.Id).Include(p => p.Brand).Include(p=> p.Category).ToListAsync());
+            var list = await _datacontext.Products.OrderByDescending(p => p.Id).Include(p => p.Brand).Include(p => p.Category).ToListAsync();
+            const int pageSize = 10; //10 items/trang
+
+            if (pg < 1) //page < 1;
+            {
+                pg = 1; //page ==1
+            }
+            int recsCount = list.Count();
+
+            var pager = new Paginate(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = list.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+            return View(data);
+            
         }
         public IActionResult Create()
         {
@@ -98,20 +115,17 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             {
                 product.Slug = product.Name.Replace(" ", "-");
                 var Slug = await _datacontext.Products.FirstOrDefaultAsync(x => x.Slug == product.Slug);
-                if (Slug != null)
-                {
-                    ModelState.AddModelError("", "Sản phẩm đã có trong hệ thống");
-                    return View(product);
-                }
+               
 
                 if (product.imageupload != null)
                 {
                     string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/products");
                     string imagename = Guid.NewGuid().ToString() + "_" + product.imageupload.FileName;
                     string filepath = Path.Combine(uploadsDir, imagename);
-                    string oldfileimage = Path.Combine(uploadsDir, exits_product.image);
+                  
                     try
                     {
+                        string oldfileimage = Path.Combine(uploadsDir, exits_product.image);
                         if (System.IO.File.Exists(oldfileimage))
                         {
                             System.IO.File.Delete(oldfileimage);
@@ -127,11 +141,16 @@ namespace TerraCottaStore.Areas.Admin.Controllers
                     exits_product.image = imagename;
                     
                 }
+                else
+                {
+                    exits_product.image = Slug.image;
+                }
                 exits_product.Name = product.Name;
                 exits_product.Price = product.Price;
                 exits_product.Description = product.Description;
                 exits_product.CategoryID = product.CategoryID;
                 exits_product.BrandID = product.BrandID;
+                exits_product.Quantity = product.Quantity;
                 exits_product.status = 1;
                 _datacontext.Update(exits_product);
                 await _datacontext.SaveChangesAsync();
@@ -180,10 +199,11 @@ namespace TerraCottaStore.Areas.Admin.Controllers
         {
             ProductModel product = await _datacontext.Products.FindAsync(id);
            
-                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/produts");
-                string oldfileimage = Path.Combine(uploadDir, product.image);
+                
             try
             {
+                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/produts");
+                string oldfileimage = Path.Combine(uploadDir, product.image);
                 if (System.IO.File.Exists(oldfileimage))
                 {
                     System.IO.File.Delete(oldfileimage);
