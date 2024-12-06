@@ -303,8 +303,9 @@
 	<script>
 		$(document).ready(function () {
 			
-		})
-	</script>
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 	<script>
 		$(document).ready(function ()
 		{
