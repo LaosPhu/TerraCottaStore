@@ -20,25 +20,11 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             _datacontext = datacontex;
             _webHostEnvironment = webHostEnvironment;
         }
-        public async Task<IActionResult> Index(int pg =1)
+        public async Task<IActionResult> Index()
         {
-            var list = await _datacontext.Products.OrderByDescending(p => p.Id).Include(p => p.Brand).Include(p => p.Category).ToListAsync();
-            const int pageSize = 10; //10 items/trang
-
-            if (pg < 1) //page < 1;
-            {
-                pg = 1; //page ==1
-            }
-            int recsCount = list.Count();
-
-            var pager = new Paginate(recsCount, pg, pageSize);
-
-            int recSkip = (pg - 1) * pageSize;
-
-            var data = list.Skip(recSkip).Take(pager.PageSize).ToList();
-
-            ViewBag.Pager = pager;
-            return View(data);
+          
+            
+            return View(await _datacontext.Products.OrderByDescending(p => p.Id).Include(p => p.Brand).Include(p => p.Category).ToListAsync());
             
         }
         public IActionResult Create()

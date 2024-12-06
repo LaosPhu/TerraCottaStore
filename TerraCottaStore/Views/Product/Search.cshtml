@@ -1,5 +1,9 @@
 ﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model IEnumerable<ProductModel>
+@{
+	ViewData["Title"] = ViewBag.Keyword;
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <div class="col-sm-3">
 	@Html.Partial("_SideBarPartial")
@@ -12,7 +16,7 @@
 <div class="col-sm-9 padding-right">
 	<div class="features_items">
 		<!--features_items-->
-		<h2 class="title text-center">Features Items</h2>
+		<h2 class="title text-center">@ViewBag.Keyword</h2>
 		@foreach (var item in Model)
 		{
 			<a href="">
