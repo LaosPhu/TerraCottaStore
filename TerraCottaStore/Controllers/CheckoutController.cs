@@ -47,6 +47,7 @@ namespace TerraCottaStore.Controllers
                 foreach (var cart in cartItems)
                 { var productmodle = await _datacontext.Products.FirstOrDefaultAsync(p=> p.Id == cart.ProductID);
 					productmodle.Quantity -= cart.Quantati;
+					if (productmodle.Quantity==0) productmodle.status = 0;
 					_datacontext.Update(productmodle);
 					await _datacontext.SaveChangesAsync();
                 }

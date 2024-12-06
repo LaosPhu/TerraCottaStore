@@ -21,11 +21,14 @@ namespace TerraCottaStore.Models
         [Required, Range(1, int.MaxValue, ErrorMessage = "Thêm 1 Danh mục")]
         public int CategoryID { get; set; }
 		public CategoryModel Category { get; set; }
-		public int Quantity { get; set; }
-		public BrandModel Brand { get; set; }
+       
+       
+        public int Quantity{ get; set;}
+        public BrandModel Brand { get; set; }
 		public string Slug {  get; set; }
 		public string image { get; set; }
 		public int status { get; set; }
+		public ICollection<RatingModel> Ratings { get; set; }
 		[NotMapped]
 		[FileExtension]
 		public IFormFile? imageupload { get; set; }

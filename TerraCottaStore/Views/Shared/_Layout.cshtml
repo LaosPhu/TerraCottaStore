@@ -92,7 +92,7 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+								<li><a asp-controller="Cart" asp-action="Index" ><i class="fa fa-shopping-cart"></i> Cart</a></li>
 								@if(User.Identity?.IsAuthenticated ?? false)
 								{
 									<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
@@ -128,7 +128,7 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a asp-controller="Home">Home</a></li>
+								<li><a asp-controller="Home" asp-action="Index">Home</a></li>
 								<li class="dropdown">
 									<a asp-controller="Product">Shop<i class="fa fa-angle-down"></i></a>
 									<ul role="menu" class="sub-menu">
@@ -152,9 +152,13 @@
 						</div>
 					</div>
 					<div class="col-sm-3">
+						<form asp-action="Search" asp-controller="Product" method="post">
 						<div class="search_box pull-right">
-							<input type="text" placeholder="Search" />
-						</div>
+							<input type="text" placeholder="Search" name="searchTerm"/>
+						
+						<button class="btn btn-warning " type="submit">Search</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -203,7 +207,7 @@
 	</section><!--/slider-->
 
 	<section>
-		<div class="container">
+		<div class="container" >
 			<div class="row">
 				@Html.Partial("_NotificationPartial")
 				@RenderBody()

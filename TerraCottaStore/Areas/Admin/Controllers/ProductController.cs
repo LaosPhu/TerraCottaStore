@@ -20,25 +20,11 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             _datacontext = datacontex;
             _webHostEnvironment = webHostEnvironment;
         }
-        public async Task<IActionResult> Index(int pg =1)
+        public async Task<IActionResult> Index()
         {
-            var list = await _datacontext.Products.OrderByDescending(p => p.Id).Include(p => p.Brand).Include(p => p.Category).ToListAsync();
-            const int pageSize = 10; //10 items/trang
-
-            if (pg < 1) //page < 1;
-            {
-                pg = 1; //page ==1
-            }
-            int recsCount = list.Count();
-
-            var pager = new Paginate(recsCount, pg, pageSize);
-
-            int recSkip = (pg - 1) * pageSize;
-
-            var data = list.Skip(recSkip).Take(pager.PageSize).ToList();
-
-            ViewBag.Pager = pager;
-            return View(data);
+          
+            
+            return View(await _datacontext.Products.OrderByDescending(p => p.Id).Include(p => p.Brand).Include(p => p.Category).ToListAsync());
             
         }
         public IActionResult Create()
@@ -74,7 +60,10 @@ namespace TerraCottaStore.Areas.Admin.Controllers
                         fs.Close();
                         product.image=imagename;
                     }
-                product.status = 1; 
+                if (product.Quantity == 0) 
+                    product.status = 0;
+                else
+                    product.status = 1; 
                 _datacontext.AddAsync(product);
                await _datacontext.SaveChangesAsync();
 
@@ -114,7 +103,7 @@ namespace TerraCottaStore.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 product.Slug = product.Name.Replace(" ", "-");
-                var Slug = await _datacontext.Products.FirstOrDefaultAsync(x => x.Slug == product.Slug);
+                var Slug = await _datacontext.Products.FirstOrDefaultAsync(x => x.Id == product.Id);
                
 
                 if (product.imageupload != null)
@@ -151,7 +140,10 @@ namespace TerraCottaStore.Areas.Admin.Controllers
                 exits_product.CategoryID = product.CategoryID;
                 exits_product.BrandID = product.BrandID;
                 exits_product.Quantity = product.Quantity;
-                exits_product.status = 1;
+                if (product.Quantity == 0) 
+                    exits_product.status = 0;
+                else
+                    exits_product.status = 1;
                 _datacontext.Update(exits_product);
                 await _datacontext.SaveChangesAsync();
 
