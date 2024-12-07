@@ -67,5 +67,26 @@ namespace TerraCottaStore.Areas.Admin.Controllers
                 return StatusCode(500,"An error has occur");
             }
         }
+       
+        public async Task<IActionResult> Delete(int id)
+        {
+            var order = await _datacontext.Orders.FindAsync(id);
+            var list = await _datacontext.OrderDetails.Where(od => od.OrderCode==order.OrderCode).ToListAsync();
+          
+            if (list != null)
+            {
+                foreach (var item in list)
+                { var productmodul = await _datacontext.Products.Where(pro => pro.Id==item.ProductId).FirstOrDefaultAsync();
+                    productmodul.Quantity += item.Quantati;
+                    _datacontext.Update(productmodul);
+                    _datacontext.Remove(item);
+                    
+                }
+              
+               _datacontext.Remove(order);
+                await _datacontext.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");   
+        }
     }
 }
