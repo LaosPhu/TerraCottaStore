@@ -11,7 +11,8 @@
 }
 <h3>List Order</h3>
 
-<table class="table">
+<table class="table" id="myTable">
+    >
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -19,6 +20,7 @@
             <th scope="col">User name</th>
             <th scope="col">Order Date</th>
             <th scope="col">Status</th>
+            <th scope="col">Action </th>
 
         </tr>
     </thead>
@@ -27,6 +29,7 @@
         {
 
             <tr>
+                <th>@item.Id</th>
                 <th scope="row">@item.OrderCode</th>
 
                 <td>@item.UserName</td>

@@ -4,9 +4,10 @@
     decimal subtotal =0;
     decimal total = 0;
 }
-<h3>Order  detail </h3>
+<h3 id="ordercode"> Đơn hàng :@Model.First().OrderCode </h3>
 
-<table class="table">
+<table class="table" id="myorder">
+    
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -16,6 +17,7 @@
             <th scope="col">Price</th>
             <th scope="col">Quantati</th>
             <th scope="col">Subtotal</th>
+            <th scope="col"> Action</th>
         </tr>
     </thead>
     <tbody>
@@ -44,8 +46,12 @@
             </tr>
         }
         <tr>
-            <th colspan="5">Total:</th>
+            <th >Total:</th>
             <td>@total.ToString("C")</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td>
                 <select class="form-control select-update-order">
                     <option value="1">
@@ -64,6 +70,29 @@
 </table>
 
 @section Scripts{
+    <script>
+        new  DataTable('#myorder', {
+            layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            title: function () {
+                                // Lấy nội dung từ phần tử HTML có class 'ordercode'
+                                return $('#ordercode').text().trim();
+                            }, // Tiêu đề mới
+                            exportOptions: {
+
+                                columns: [0, 1, 2, 3 ,4,5] 
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+    </script>
+       
     <script>
         $(document).ready(function () 
         { 

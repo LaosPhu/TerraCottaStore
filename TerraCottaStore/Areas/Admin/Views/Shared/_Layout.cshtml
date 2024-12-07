@@ -13,9 +13,15 @@
 	<link href="~/css/animate.css" rel="stylesheet">
 	<link href="~/css/main.css" rel="stylesheet">
 	<link href="~/css/responsive.css" rel="stylesheet">
-	<link href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" rel="stylesheet">
-	
 
+	<!-- DATATABLES-->
+	<link href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" rel="stylesheet">
+	<link href="https://cdn.datatables.net/buttons/3.2.0/css/buttons.dataTables.css" rel="stylesheet">
+
+	
+	
+	
+	<!-- Sweet Aler 2-->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.css" rel="stylesheet">
 
@@ -23,7 +29,7 @@
 	<script src="js/html5shiv.js"></script>
 	<script src="js/respond.min.js"></script>
 	<![endif]-->
-	<link rel="shortcut icon" href="images/ico/favicon.ico">
+	<link rel="shortcut icon" href="~/images/Terra Cotta.png">
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
@@ -49,7 +55,7 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="logo pull-left">
-							<a href="index.html"><img src="images/home/logo.png" alt="" /></a>
+							<a><img src="~/images/Terra Cotta.png" alt="logo" width="50px" /></a>
 						</div>
 						<div class="btn-group pull-right">
 		
@@ -124,8 +130,19 @@
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
 	<script src="~/backend/js/site.js"> </script>
+
+	<!-- Datatables-->
 	<script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"> </script>
-	
+
+	<script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.dataTables.js"> </script>
+	<script src="https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.js"> </script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"> </script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"> </script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"> </script>
+	<script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js"> </script>
+	<script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js"> </script>
+
+
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
@@ -138,7 +155,13 @@
 	</script>
 
 	<script>
-		let table = new DataTable('#myTable');
+		let table = new DataTable('#myTable', {
+			layout: {
+				topStart: {
+					buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+				}
+			 }
+			});
 	</script>
 	@await RenderSectionAsync("Scripts",required:false)
 </body>
