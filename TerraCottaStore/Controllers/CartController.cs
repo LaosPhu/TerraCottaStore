@@ -13,8 +13,8 @@ namespace TerraCottaStore.Controllers
 		{
 		 _datacontext = dataContext;
 		}
-		public IActionResult index()
-		{
+		public IActionResult Index()
+		{ 
 			List<CartItemModel> Items = HttpContext.Session.Getjson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
 			CartItemViewModel CartVM = new()
 			{

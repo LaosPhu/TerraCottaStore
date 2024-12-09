@@ -20,8 +20,17 @@ namespace TerraCottaStore.Controllers
 			 _emailSender = emailSender;
 
         }
+		public ActionResult Index()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		
 		public async Task<IActionResult> Checkout ()
-		{	var userEmail =User.FindFirstValue(ClaimTypes.Email);
+		{
+			
+			var userEmail =User.FindFirstValue(ClaimTypes.Email);
 			if (string.IsNullOrWhiteSpace(userEmail))
 			{ return RedirectToAction("Login", "Account"); }
 			else
@@ -54,13 +63,13 @@ namespace TerraCottaStore.Controllers
 					_datacontext.Update(productmodle);
 					await _datacontext.SaveChangesAsync();
                 }
-                HttpContext.Session.Remove("Cart");
+              
 				TempData["success"] = "Tao don hang thanh cong";
 				emailpos(userEmail);
 
 
 
-
+                HttpContext.Session.Remove("Footprint");
                 return RedirectToAction("Index","Cart");
 			}
 			return View();
