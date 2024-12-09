@@ -3,8 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using TerraCottaStore.Areas.Admin.Repository;
 using TerraCottaStore.Models;
 using TerraCottaStore.Repository;
+using TerraCottaStore.Services.VNPay;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+//build vnpay
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 // connect DB
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -44,11 +49,10 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 
-
 var app = builder.Build();
-//404
+
 //app.UseStatusCodePagesWithRedirects("/Home/Error?statuscode={0}");
-//
+
 app.UseSession();
 
 // Configure the HTTP request pipeline.

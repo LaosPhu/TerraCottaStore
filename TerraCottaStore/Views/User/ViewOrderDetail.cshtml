@@ -1,0 +1,130 @@
+﻿@model IEnumerable<OrderDetails>
+@{
+    ViewData["title"] = "Orderdetail";
+    decimal subtotal = 0;
+    decimal total = 0;
+}
+<h3 id="ordercode"> Đơn hàng :@Model.First().OrderCode </h3>
+
+<table class="table" id="myorder">
+
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+
+            <th scope="col">Name</th>
+            <th scope="col">Image</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantati</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col"> Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            subtotal = item.Quantati * item.Price;
+            total += subtotal;
+            <tr>
+                <input type="hidden" asp-for="@item.OrderCode" class="getId" />
+                <th scope="row">@item.Id</th>
+
+                <td>@item.Product.Name</td>
+                <td><img src="~/media/products/@item.Product.image" width="120px"><br>@item.Product.image</td>
+                <td>$@item.Price</td>
+                <td>@item.Quantati</td>
+                <td>@subtotal.ToString("C")</td>
+
+                <td>
+
+                </td>
+
+            </tr>
+        }
+        <tr>
+            <th>Total:</th>
+            <td>@total.ToString("C")</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+               <a asp-action="Index" asp-controller="Home">Quay về trang chủ</a>
+            </td>
+        </tr>
+
+
+
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        new  DataTable('#myorder', {
+            layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            title: function () {
+                                // Lấy nội dung từ phần tử HTML có class 'ordercode'
+                                return $('#ordercode').text().trim();
+                            }, // Tiêu đề mới
+                            exportOptions: {
+
+                                columns: [0, 1, 2, 3 ,4,5]
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function ()
+        {
+            $('.select-update-order').change(function(){
+                var status = $(this).val();
+                var ordercode = $('.getId').val();
+
+
+                $.ajax({
+
+                type: "POST",
+                url: "@Url.Action("UpdateOrder")",
+                data: { status: status, ordercode: ordercode },
+
+                success: function (result)
+                {
+                if (result.success)
+                {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Order status updated",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                }
+                else
+                {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Order update fail",
+                                text: "Something went wrong!",
+
+                            });
+                }
+                },
+                error: function (req ,status,error )
+                {
+                console.error("Error updating order", error);
+                }
+                })
+
+            })
+        })
+    </script>
+}

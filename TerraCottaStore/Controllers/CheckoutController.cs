@@ -4,6 +4,7 @@ using System.Security.Claims;
 using TerraCottaStore.Areas.Admin.Repository;
 using TerraCottaStore.Models;
 using TerraCottaStore.Repository;
+using TerraCottaStore.Services.VNPay;
 
 namespace TerraCottaStore.Controllers
 {
@@ -11,8 +12,10 @@ namespace TerraCottaStore.Controllers
 	{
 		private readonly DataContext _datacontext;
         private readonly IEmailSender _emailSender;
-        public CheckoutController(IEmailSender emailSender,DataContext dataContext)
+		private readonly IVnPayService _vnPayService;
+		public CheckoutController(IEmailSender emailSender,DataContext dataContext, IVnPayService vnPayService)
 		{
+			_vnPayService = vnPayService;
 			_datacontext = dataContext;
 			 _emailSender = emailSender;
 
@@ -69,5 +72,13 @@ namespace TerraCottaStore.Controllers
             var Message = "test sever";
             await _emailSender.SendEmailAsync(receiver, subject, Message);
         }
+		[HttpGet]
+		public IActionResult PaymentCallbackVnpay()
+		{
+			var response = _vnPayService.PaymentExecute(Request.Query);
+
+			return Json(response);
+
+		}
 	}
 }
