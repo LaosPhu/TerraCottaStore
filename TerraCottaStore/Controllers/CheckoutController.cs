@@ -22,8 +22,15 @@ namespace TerraCottaStore.Controllers
         }
 		public ActionResult Index()
 		{
-			return View();
-		}
+            List<CartItemModel> Items = HttpContext.Session.Getjson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+            CartItemViewModel CartVM = new()
+            {
+                CartItems = Items,
+                GrandTotal = Items.Sum(a => a.Quantati * a.Price),
+
+            };
+            return View(CartVM);
+        }
 
 		[HttpPost]
 		

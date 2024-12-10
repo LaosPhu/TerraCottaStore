@@ -78,13 +78,7 @@
 						@if (User.Identity?.IsAuthenticated ?? false)
 						{
 							<td><a class="btn btn-default btn-sm" asp-controller="Checkout" asp-action="Index"> Checkout </a>
-								<form method="post" asp-controller="Payment" asp-action="CreatePaymentUrlVnpay">
-									<input type="hidden" name="Name" value="@User.Identity.Name"></input>
-									<input type="hidden" name="Amount" value="@Model.GrandTotal"></input>
-									<input type="hidden" name="OrderDescription" value="Thanh Toan tai Terra Cotta"></input>
-									<input type="hidden" name="OrderType" value="other"></input>
-								<button type="submit" class="btn btn-default btn-sm"> Vnpayment </button>
-								</form>
+								
 							</td>
 						}
 						else

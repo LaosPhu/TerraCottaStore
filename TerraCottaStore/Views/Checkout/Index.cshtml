@@ -29,7 +29,7 @@
             color: #333;
         }
 
-        form {
+        .form-div {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -68,34 +68,38 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            flex-wrap: wrap; /* Cho phép chúng gói gọn khi màn hình nhỏ */
+            gap: 15px;
+            flex-wrap: wrap; /* Đảm bảo các nút gói gọn trên màn hình nhỏ */
             margin-top: 20px;
         }
 
         .payment-btn {
-            flex: 1;
+            flex: 1 1 45%; /* Kích thước nút co giãn */
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 15px;
-            background: #f2f2f2;
+            background-color: #f8f8f8;
             border: 1px solid #ddd;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
             text-align: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
 
             .payment-btn img {
-                height: 24px;
+                max-width: 100px;
+                max-height: 40px;
+                margin-bottom: 10px;
             }
 
             .payment-btn:hover {
-                background-color: #e1e1e1;
+                transform: scale(1.05);
+                background-color: #e8e8e8;
             }
 
-            /* Màu sắc cho các nút thanh toán */
+            /* Màu sắc đặc trưng cho từng nút thanh toán */
             .payment-btn.paypal {
                 background-color: #ffc439;
             }
@@ -114,35 +118,28 @@
                 }
 
             .payment-btn.vnpay {
-                background-color: #005bac;
+                background-color: #f8f8f8;
                 color: white;
             }
 
                 .payment-btn.vnpay:hover {
-                    background-color: #004f96;
+                    background-color: #32abdf;
                 }
 
             .payment-btn.googlepay {
-                background-color: #4285f4;
+                background-color: #3252c5;
                 color: white;
             }
 
                 .payment-btn.googlepay:hover {
-                    background-color: #3367d6;
+                    background-color: #293e8c;
                 }
-
-        /* Tạo khoảng cách cho nút thanh toán */
-        .payment-options button {
-            flex: none; /* Đảm bảo nút không thay đổi kích thước */
-            width: auto;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
     <div class="container-checkout">
         <h2>Express Checkout</h2>
-        <form action="/submit-payment" method="POST">
+        <div class="form-div">
             <div class="form-group-checkout">
                 <label for="name">Họ và Tên</label>
                 <input type="text" id="name" name="name" required>
@@ -163,21 +160,33 @@
             <!-- Div chứa các nút thanh toán -->
             <div class="payment-options">
                 <div class="payment-btn paypal">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+                    <form method="post" action="/Payment/PayPal">
+                        <img src="~/images/Paypal logo.png" alt="PayPal">
+                        <span>PayPal</span>
+                    </form>
                 </div>
                 <div class="payment-btn momo">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/MoMo_Logo.png" alt="Momo">
+                    <form method="post" action="/Payment/MoMo">
+                        <h4>momo</h4>
+                       
+                    </form>
                 </div>
                 <div class="payment-btn vnpay">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/02/VNPAY_logo.png" alt="VNPay">
+                    <form method="post" action="/Payment/CreatePaymentUrlVnpay">
+                        <img src="~/images/VNpay LOgo.png" alt="VNpay">
+                       
+                    </form>
                 </div>
                 <div class="payment-btn googlepay">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_Pay_Logo.svg" alt="Google Pay">
+                    <form method="post" action="/Payment/GooglePay">
+                        <img src="~/images/COD_logo.png" width="60px" alt="VNPay">
+                       
+                    </form>
                 </div>
             </div>
-            <!-- Nút thanh toán -->
+            <!-- Nút hoàn tất thanh toán -->
             <button type="submit">Hoàn Tất Thanh Toán</button>
-        </form>
+        </div>
     </div>
 </body>
 </html>

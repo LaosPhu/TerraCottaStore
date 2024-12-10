@@ -1,0 +1,12 @@
+﻿@using TerraCottaStore.Models.VNaymodel
+@model PaymentResponseModel
+
+@{
+    ViewData["title"] = "Kết Quả giao dịch qua vnpay";
+
+}
+<h5> thanh toán thành công</h5>
+<h6> Order Id : @Model.OrderId</h6>
+<h6> Order info: @Model.OrderDescription</h6>
+<h6> Tổng tiền : @Model.PaymentMethod</h6>
+<h5> Xem đơn hàng</h5>
