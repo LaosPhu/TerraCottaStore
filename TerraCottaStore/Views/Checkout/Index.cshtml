@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model CartItemViewModel
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -172,13 +173,19 @@
                     </form>
                 </div>
                 <div class="payment-btn vnpay">
-                    <form method="post" action="/Payment/CreatePaymentUrlVnpay">
-                        <img src="~/images/VNpay LOgo.png" alt="VNpay">
-                       
+                    <form method="post" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                        <button type="submit" style="width: 100%; height: 100%; background: none; border: none; display: flex; align-items: center; justify-content: center; padding: 0;">
+                            <img src="~/images/VNpay LOgo.png" alt="VNpay">
+                       </button>
+                        <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                        <input type="hidden" name="OrderType" value="other" />
+                        <input type="hidden" name="OrderDescription" value="Thanh toan tai terracotta" />
+                        <input type="hidden" name="Name" value="@User.Identity.Name" />
                     </form>
                 </div>
                 <div class="payment-btn googlepay">
-                    <form method="post" action="/Payment/GooglePay">
+                    <form >
+                     
                         <img src="~/images/COD_logo.png" width="60px" alt="VNPay">
                        
                     </form>

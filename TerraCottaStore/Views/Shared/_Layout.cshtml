@@ -1,11 +1,16 @@
-﻿ <!DOCTYPE html>
+﻿@{
+	ViewData["title"] = "TerraCotta";
+	var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+	var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+} 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<title>Home | E-Shopper</title>
+	<title>TerraCotta</title>
 	<link href="~/css/bootstrap.min.css" rel="stylesheet">
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -165,47 +170,55 @@
 			</div>
 		</div><!--/header-bottom-->
 	</header><!--/header-->
+	@if (currentController == "Home" && currentAction == "Index")
+	{
+		<section id="slider">
+			<!--slider-->
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<div id="slider-carousel" class="carousel slide" data-ride="carousel">
+							<ol class="carousel-indicators">
+								<li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
+								<li data-target="#slider-carousel" data-slide-to="1"></li>
+								<li data-target="#slider-carousel" data-slide-to="2"></li>
+							</ol>
 
-	<section id="slider">
-		<!--slider-->
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<div id="slider-carousel" class="carousel slide" data-ride="carousel">
-						<ol class="carousel-indicators">
-							<li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
-							<li data-target="#slider-carousel" data-slide-to="1"></li>
-							<li data-target="#slider-carousel" data-slide-to="2"></li>
-						</ol>
+							<div class="carousel-inner">
+								<div class="item active">
 
-						<div class="carousel-inner">
-							<div class="item active">
-				
-									<img src="~/images/back3.jpg" width="100%" height="600"/>
-							
+									<img src="~/images/back3.jpg" width="100%" height="600" />
+
+								</div>
+								<div class="item">
+									<img src="~/images/back1.jpg" width="100%" height="600" />
+								</div>
+
+								<div class="item">
+									<img src="~/images/back2.jpg" width="100%" height="600" />
+								</div>
+
 							</div>
-							<div class="item">
-								<img src="~/images/back1.jpg" width="100%" height="600" />
-							</div>
 
-							<div class="item">
-								<img src="~/images/back2.jpg" width="100%" height="600"/>
-							</div>
-
+							<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+								<i class="fa fa-angle-left"></i>
+							</a>
+							<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+								<i class="fa fa-angle-right"></i>
+							</a>
 						</div>
 
-						<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-							<i class="fa fa-angle-left"></i>
-						</a>
-						<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-							<i class="fa fa-angle-right"></i>
-						</a>
 					</div>
-
 				</div>
 			</div>
-		</div>
-	</section><!--/slider-->
+		</section>
+	}
+	
+	
+
+		<!--/slider-->
+	
+	
 
 	<section>
 		<div class="container" >
