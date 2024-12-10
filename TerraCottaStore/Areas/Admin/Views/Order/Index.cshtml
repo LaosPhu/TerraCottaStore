@@ -1,4 +1,5 @@
-﻿@model IEnumerable<OrderModel>
+﻿@using System.Text.RegularExpressions
+@model IEnumerable<OrderModel>
 @{
     ViewData["title"] = "Order Listed";
     Paginate pager = new Paginate();
@@ -20,6 +21,7 @@
             <th scope="col">User name</th>
             <th scope="col">Order Date</th>
             <th scope="col">Status</th>
+            <th scope="col">Payment methob</th>
             <th scope="col">Action </th>
 
         </tr>
@@ -43,6 +45,8 @@
                 {
                     <td style="color:crimson">đơn hàng thành công</td>
                 }
+
+                <td> <a asp-action="DetailVnPay" asp-controller="VnPay" asp-route-id="@(Regex.Match(item.OrderMethob, @"\d+").Value)" > </a>@item.OrderMethob</td>
                 <td>
                     <a class="btn btn-warning btn-sm" asp-action="ViewOrder" asp-controller="Order" asp-route-ordercode="@item.OrderCode">View Order</a>
                     <a class="btn btn-danger btn-sm confirmDeletion" asp-action="delete" asp-controller="Order" asp-route-id="@item.Id">Delete</a>
@@ -58,7 +62,7 @@
                     }
 
                 </td>
-
+               
             </tr>
         }
 

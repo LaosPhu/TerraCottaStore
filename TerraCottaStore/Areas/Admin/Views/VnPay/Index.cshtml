@@ -1,0 +1,46 @@
+﻿@model IEnumerable<VnPayModel>
+
+@{
+
+    ViewData["title"] = "Vnpay info";
+}
+<h3>List User</h3>
+<table class="table" id="myTable">
+    >
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">OrderDescription</th>
+            <th scope="col">TransactionId</th>
+            <th scope="col">OrderId</th>
+            <th scope="col">PaymentMethod</th>
+            <th scope="col">PaymentId</th>
+            <th>Date</th>
+            
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <th scope="row">@item.Id</th>
+
+                <td>@item.OrderDescription</td>
+                <td>@item.TransactionId</td>
+                <td>@item.OrderId</td>
+
+
+
+                <td>@item.PaymentMethod</td>
+                <td><a asp-action="DetailVnPay" asp-controller="VnPay" asp-route-id="@item.PaymentId" >@item.PaymentId</a></td>
+                <td> @item.DateCreated
+                </td>
+               
+            </tr>
+        }
+
+        <a asp-action="Index" asp-controller="Vnpay"> Quay về trang list vnpay info </a>
+    </tbody>
+</table>

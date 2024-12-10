@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TerraCottaStore.Repository;
 
@@ -11,9 +12,11 @@ using TerraCottaStore.Repository;
 namespace TerraCottaStore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241210153320_Vnpay1")]
+    partial class Vnpay1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -324,9 +327,6 @@ namespace TerraCottaStore.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OrderMethob")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")

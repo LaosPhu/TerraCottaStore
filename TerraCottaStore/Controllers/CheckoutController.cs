@@ -34,7 +34,7 @@ namespace TerraCottaStore.Controllers
 
 		[HttpPost]
 		
-		public async Task<IActionResult> Checkout ()
+		public async Task<IActionResult> Checkout (string PaymentMethob, string paymentId)
 		{
 			
 			var userEmail =User.FindFirstValue(ClaimTypes.Email);
@@ -45,6 +45,22 @@ namespace TerraCottaStore.Controllers
 				var ordercode =Guid.NewGuid().ToString();
 				var orderitem = new OrderModel();
 				orderitem.OrderCode = ordercode;
+				if (PaymentMethob == null)
+				{
+					orderitem.OrderMethob = "COD";
+				}
+				else
+				{
+					if (PaymentMethob == "VnPay")
+					{
+						orderitem.OrderMethob ="VnPay"+paymentId;
+					}
+					else
+					{
+						if (PaymentMethob == "Momo")
+							orderitem.OrderMethob = "Momo"+PaymentMethob;
+					}
+				}
 				orderitem.UserName = userEmail;
 				orderitem.Status = 1;
 				orderitem.CreatedDate = DateTime.Now;
@@ -76,7 +92,7 @@ namespace TerraCottaStore.Controllers
 
 
 
-                HttpContext.Session.Remove("Footprint");
+                HttpContext.Session.Remove("Cart");
                 return RedirectToAction("Index","Cart");
 			}
 			return View();
@@ -89,12 +105,73 @@ namespace TerraCottaStore.Controllers
             await _emailSender.SendEmailAsync(receiver, subject, Message);
         }
 		[HttpGet]
-		public IActionResult PaymentCallbackVnpay()
+		public async Task <IActionResult> PaymentCallbackVnpay()
 		{
 			var response = _vnPayService.PaymentExecute(Request.Query);
+			if (response.VnPayResponseCode == "00")
+			{
+				var VnpayInsert = new VnPayModel
+				{
+					OrderId = response.OrderId,
+					PaymentMethod = response.PaymentMethod,
+					OrderDescription = response.OrderDescription,
+					TransactionId = response.TransactionId,
+					PaymentId = response.PaymentId,
+					DateCreated = DateTime.Now,
+				};
+				_datacontext.Add(VnpayInsert);
+				await _datacontext.SaveChangesAsync();
 
-			return Json(response);
+				var PaymentMethob = response.PaymentMethod;
+				var PaymentId	= response.PaymentId;
+				await Checkout(PaymentMethob,PaymentId);
+				
+			}
+			else
+			{
+				return RedirectToAction("ErrorVnPayment","Checkout", response.VnPayResponseCode);
+			}
+			return View(response);
 
 		}
-	}
+
+		public IActionResult ErrorVnPayment (string error)
+		{
+            switch (error)
+            {
+                case "01":
+                    error = "Giao dịch đã tồn tại";
+                    break;
+
+                case "02":
+                    error = "Merchant không hợp lệ (kiểm tra lại vnp_tmn_code)";
+                    break;
+
+                case "04":
+                    error = "Khởi tạo GD không thành công do Website đang bị tạm khóa";
+                    break;
+
+                case "08":
+                    error = "Giao dịch không thành công do: Hệ thống Ngân hàng đang bảo trì. Xin quý khách tạm thời không thực hiện giao dịch bằng thẻ/tài khoản của Ngân hàng này";
+                    break;
+
+                case "24":
+                    error = "Giao dịch bị hủy";
+                    break;
+
+                case "79":
+                    error = "Khác hàng thực hiện xác thực sai quá số lần cho phépy";
+                    break;
+                case "97":
+                    error = "Sai chữ ký";
+                    break;
+                default:
+                    error = "Lỗi không xác đinh khi giao dịch vnpay";
+                    break;
+            }
+
+            return View(model :error);
+		}
+
+    }
 }

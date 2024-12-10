@@ -1,0 +1,64 @@
+﻿@model VnPayModel
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<style>
+
+    .title-12345 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .table-98765 {
+        border-collapse: collapse;
+        width: 100%;
+        font-family: Arial, sans-serif;
+    }
+
+        .table-98765 th, .table-98765 td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table-98765 th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+</style>
+<body>
+    <h2 class="title-12345">Chi tiết giao dịch</h2>
+
+    <table class="table-98765">
+        <tr>
+            <th>Mã giao dịch</th>
+            <td>@Model.TransactionId</td>
+        </tr>
+        <tr>
+            <th>Mã đơn hàng</th>
+            <td>@Model.OrderId</td>
+        </tr>
+        <tr>
+            <th>Phương thức thanh toán</th>
+            <td>@Model.PaymentMethod</td>
+        </tr>
+        <tr>
+            <th>Mã thanh toán</th>
+            <td>@Model.PaymentId</td>
+        </tr>
+        <tr>
+            <th>Ngày tạo</th>
+            <td>@Model.DateCreated.ToString("dd/MM/yyyy HH:mm:ss")</td>
+        </tr>
+        <tr>
+            <th>Mô tả đơn hàng</th>
+            <td>@Model.OrderDescription</td>
+        </tr>
+    </table>
+</body>
