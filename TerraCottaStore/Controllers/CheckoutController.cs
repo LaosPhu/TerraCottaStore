@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.IO;
 using System.Security.Claims;
 using TerraCottaStore.Areas.Admin.Repository;
+using TerraCottaStore.Migrations;
 using TerraCottaStore.Models;
 using TerraCottaStore.Repository;
 using TerraCottaStore.Services.VNPay;
@@ -22,19 +26,31 @@ namespace TerraCottaStore.Controllers
         }
 		public ActionResult Index()
 		{
+			var shippingpricecook = Request.Cookies["shippingPrice"];
+			var locate = Request.Cookies["Locaate"];
+			decimal Price = 0;
+			if (shippingpricecook != null)
+			{
+				var shipingpriciejson = shippingpricecook;
+				Price = JsonConvert.DeserializeObject<decimal>(shipingpriciejson);
+				locate = JsonConvert.DeserializeObject<string>(locate);
+                ViewBag.Shipping = locate;
+                Response.Cookies.Delete("shippingPrice");
+                Response.Cookies.Delete("Locaate");
+            }
             List<CartItemModel> Items = HttpContext.Session.Getjson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
-            CartItemViewModel CartVM = new()
-            {
-                CartItems = Items,
-                GrandTotal = Items.Sum(a => a.Quantati * a.Price),
-
-            };
+			CartItemViewModel CartVM = new()
+			{
+				CartItems = Items,
+				GrandTotal = Items.Sum(a => a.Quantati * a.Price),
+				ShippingCost = Price
+			};
             return View(CartVM);
         }
 
 		[HttpPost]
 		
-		public async Task<IActionResult> Checkout (string PaymentMethob, string paymentId)
+		public async Task<IActionResult> Checkout (decimal total,string PaymentMethob, string paymentId)
 		{
 			
 			var userEmail =User.FindFirstValue(ClaimTypes.Email);
@@ -63,6 +79,7 @@ namespace TerraCottaStore.Controllers
 				}
 				orderitem.UserName = userEmail;
 				orderitem.Status = 1;
+				orderitem.total = total;
 				orderitem.CreatedDate = DateTime.Now;
 				_datacontext.Add(orderitem);
 				await _datacontext.SaveChangesAsync();
@@ -121,10 +138,13 @@ namespace TerraCottaStore.Controllers
 				};
 				_datacontext.Add(VnpayInsert);
 				await _datacontext.SaveChangesAsync();
-
-				var PaymentMethob = response.PaymentMethod;
+				
+				var parts = VnpayInsert.OrderDescription.Split(' ');
+               
+				var total = Convert.ToDecimal(parts[2]);
+                var PaymentMethob = response.PaymentMethod;
 				var PaymentId	= response.PaymentId;
-				await Checkout(PaymentMethob,PaymentId);
+				await Checkout(total,PaymentMethob,PaymentId);
 				
 			}
 			else
@@ -134,7 +154,34 @@ namespace TerraCottaStore.Controllers
 			return View(response);
 
 		}
-
+		[HttpPost]
+		public async Task<IActionResult> Getshipping (ShippingModel ship,string quan,string tinh,string phuong)
+		{	
+			var exitingShiping = await _datacontext.Shippings.FirstOrDefaultAsync(x=> x.city == tinh &&x.ward==phuong &&x.Distric==quan);
+			decimal price =0;
+			if (exitingShiping != null)
+			{ price = exitingShiping.Price; }
+			else
+			{ price = 50000; }
+			string locate = tinh +" "+ quan +" "+ phuong;
+            var locatejson =JsonConvert.SerializeObject(locate);
+            var pricejson= JsonConvert.SerializeObject(price);
+			try
+			{
+                var cookiesoptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(20),
+                    Secure = true,
+                };
+				Response.Cookies.Append("shippingPrice", pricejson, cookiesoptions);
+                Response.Cookies.Append("Locaate",locatejson, cookiesoptions);
+            }
+			catch (Exception ex) 
+			{ }
+			
+			return Json(new {price});
+		}
 		public IActionResult ErrorVnPayment (string error)
 		{
             switch (error)

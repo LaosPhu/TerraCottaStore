@@ -18,6 +18,6 @@ namespace TerraCottaStore.Repository
 		public DbSet<OrderModel> Orders { get; set; }
 		public DbSet<OrderDetails> OrderDetails { get; set; }
 		public DbSet<VnPayModel> VnPayInfos { get; set; }
-		
+		public DbSet<ShippingModel> Shippings { get; set; }	
 	}
 }

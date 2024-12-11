@@ -1,4 +1,8 @@
 ﻿@model CartItemViewModel
+@{
+    var total = Model.GrandTotal + Model.ShippingCost;
+
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -142,21 +146,67 @@
         <h2 class="h2-checkout">Express Checkout</h2>
         <div class="form-div">
             <div class="form-group-checkout">
-                <label for="name">Họ và Tên</label>
-                <input type="text" id="name" name="name" required>
+                <h4> Họ và tên</h4>
+                <label>@User.Identity.Name </label>
             </div>
             <div class="form-group-checkout">
-                <label for="address">Địa Chỉ</label>
-                <input type="text" id="address" name="address" required>
-            </div>
-            <div class="form-group-checkout">
-                <label for="phone">Số Điện Thoại</label>
-                <input type="tel" id="phone" name="phone" required>
+               <h4>Số điện thoại</h4>
+                <label> @User.Claims.FirstOrDefault(c => c.Type == "PhoneNumber")?.Value</label>
             </div>
             <div class="form-group-checkout">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <label> @User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value</label>
             </div>
+            @if (Model.ShippingCost == 0)
+            {
+                <div class="form-group-checkout">
+                <label for="address">Địa Chỉ</label>
+                <div class="form-group">
+                    <label> Tỉnh thành </label>
+                    <select class="css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+                        <option value="0">Tỉnh Thành</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Quận huyện</label>
+
+                    <select class="css_select" id="quan" name="quan" title="Chọn Quận Huyện">
+                        <option value="0">Quận Huyện</option>
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label>Xã Phườngs</label>
+                    <select class="css_select" id="phuong" name="phuong" title="Chọn Phường Xã">
+                        <option value="0">Phường Xã</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                   
+                </div>
+                </div>
+
+            }
+            else
+            { 
+                 <a asp-action="Index" asp-controller="Checkout">chọn lại địa chỉ</a>
+                <label>@ViewBag.Shipping</label>
+               
+            }
+            
+            <div class="form-group">
+                  <label>Gía vận chuyển</label>
+                  <h3>@Model.ShippingCost.ToString("#.##0")</h3>
+            </div>
+           <div class="form-group">
+                  <label>Tổng tiền các sản phẩm</label>
+                  <h3>@Model.GrandTotal.ToString("#.##0")</h3>
+                  <label>Tổng tiền phải trả </label>
+                <h3> @total.ToString("#.##0")</h3>
+            </div>
+
 
             <!-- Div chứa các nút thanh toán -->
             <div class="payment-options">
@@ -173,25 +223,22 @@
                     </form>
                 </div>
                 <div class="payment-btn vnpay">
-                    <form method="post" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                    <form method="post" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" asp-route-total="@total">
                         <button type="submit" style="width: 100%; height: 100%; background: none; border: none; display: flex; align-items: center; justify-content: center; padding: 0;">
                             <img src="~/images/VNpay LOgo.png" alt="VNpay">
                        </button>
-                        <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                        <input type="hidden" name="Amount" value="@total" />
                         <input type="hidden" name="OrderType" value="other" />
-                        <input type="hidden" name="OrderDescription" value="Thanh toan tai terracotta" />
+                        <input type="hidden" name="OrderDescription" value="" />
                         <input type="hidden" name="Name" value="@User.Identity.Name" />
                     </form>
                 </div>
                 <div class="payment-btn googlepay">
-                    <form method="post" asp-action="Checkout" asp-controller="Checkout">
+                    <form method="post" asp-action="Checkout" asp-controller="Checkout" asp-route-data="@total">
                         <button type="submit" style="width: 100%; height: 100%; background: none; border: none; display: flex; align-items: center; justify-content: center; padding: 0;">
                             <img src="~/images/COD_logo.png" width="60px" alt="VNPay">
                         </button>
-                        <input type="hidden" name="Amount" value="@Model.GrandTotal" />
-                        <input type="hidden" name="OrderType" value="other" />
-                        <input type="hidden" name="OrderDescription" value="Thanh toan tai terracotta" />
-                        <input type="hidden" name="Name" value="@User.Identity.Name" />
+                        <input type="hidden" name="total" value="@total" />
                        
                        
                     </form>
@@ -203,3 +250,76 @@
     </div>
 </body>
 </html>
+@section Scripts
+{
+<script>
+    $(document).ready(function() {
+     $("#phuong").change(function(){
+            var tinh =  $("#tinh").find('option:selected').text();
+            var quan =  $("#quan").find('option:selected').text();
+            var phuong =  $("#phuong").find('option:selected').text();
+            alert(phuong);
+          
+           
+                if (tinh == '' || quan == '' || phuong == '') {
+                    Swal.fire("Không bỏ trống");
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Getshipping", "Checkout")',
+                        data: { tinh: tinh, quan: quan, phuong: phuong},
+
+                        success: function (result) {
+                            if (result) {
+                            }
+                            location.reload();
+                           
+                        }
+                    });
+                }
+            
+           
+        })
+    })
+    
+        $(document).ready(function () {
+            //Lấy tỉnh thành
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+                if (data_tinh.error == 0) {
+                    $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                        $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
+                    });
+                    $("#tinh").change(function (e) {
+                        var idtinh = $(this).val();
+                        //Lấy quận huyện
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+                            if (data_quan.error == 0) {
+                                $("#quan").html('<option value="0">Quận Huyện</option>');
+                                $("#phuong").html('<option value="0">Phường Xã</option>');
+                                $.each(data_quan.data, function (key_quan, val_quan) {
+                                    $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
+                                });
+                                //Lấy phường xã
+                                $("#quan").change(function (e) {
+                                    var idquan = $(this).val();
+                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+                                        if (data_phuong.error == 0) {
+                                            $("#phuong").html('<option value="0">Phường Xã</option>');
+                                            $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                                                $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
+                                            });
+                                        }
+                                    });
+                                });
+
+                            }
+                        });
+                    });
+
+                }
+            });
+        });
+</script>
+
+}
