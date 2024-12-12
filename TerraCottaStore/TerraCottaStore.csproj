@@ -29,4 +29,11 @@
     <PackageReference Include="SweetAlert2" Version="1.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Shared\_Paging.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

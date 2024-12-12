@@ -17,9 +17,26 @@ namespace TerraCottaStore.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int pg =1)
         {   
-            var products = _datacontext.Products.Include("Category").Include("Brand").ToList();
+            var products = _datacontext.Products.Include("Category").Include("Brand").Where(x=>x.status==1).ToList();
+            const int pageSize = 12; //10 items/trang
+
+            if (pg < 1) //page < 1;
+            {
+                pg = 1; //page ==1
+            }
+            int recsCount = products.Count();
+
+            var pager = new Paginate(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = products.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+
+            return View(data);
             return View(products);
         }
 
